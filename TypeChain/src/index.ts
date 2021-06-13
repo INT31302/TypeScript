@@ -93,6 +93,9 @@ const addBlock = (candidateBlock: Block): void => {
   if (isBlockValid(candidateBlock, getLastestBlock()))
     blockchain.push(candidateBlock);
 };
-console.log(createNewBlock("hello"), createNewBlock("bye bye"));
+
+createNewBlock("second block");
+createNewBlock("third block");
+createNewBlock("fourth block");
 console.log(blockchain);
 export {};
