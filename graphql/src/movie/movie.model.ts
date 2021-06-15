@@ -4,8 +4,19 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 export class Movie {
   @Field((type) => Int)
   id: number;
+
   @Field()
-  name: string;
+  title: string;
+
   @Field()
-  score: number;
+  rating: number;
+
+  @Field()
+  summary: string;
+
+  @Field()
+  language: string;
+
+  @Field()
+  medium_cover_image: string;
 }
