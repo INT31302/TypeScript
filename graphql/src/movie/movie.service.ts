@@ -1,42 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { Movie } from './movie.model';
 
 @Injectable()
 export class MovieService {
-  private API_URL = 'https://yts.mx/api/v2/list_movies.json?';
+  private BASE_URL = 'https://yts.mx/api/v2/';
+  private LIST_MOVIES_URL = `${this.BASE_URL}list_movies.json`;
+  private MOVIE_DETAILS_URL = `${this.BASE_URL}movie_details.json`;
+  private MOVIE_SUGGESTIONS_URL = `${this.BASE_URL}movie_suggestions.json`;
 
-  getMovies(limit: number, rating: number) {
-    let REQUSET_URL = this.API_URL;
-    if (limit > 0) REQUSET_URL += `limit=${limit}`;
-    if (rating > 0) REQUSET_URL += `&minimum_rating=${rating}`;
-    return fetch(`${REQUSET_URL}`)
-      .then((res) => res.json())
-      .then((json) => json.data.movies);
+  async getMovies(limit: number, rating: number): Promise<[Movie]> {
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios(this.LIST_MOVIES_URL, {
+      params: {
+        limit,
+        minimum_rating: rating,
+      },
+    });
+    return movies;
   }
 
-  //   getById(id: number) {
-  //     const filteredMovie = this.movies.filter((movie) => id === movie.id);
-  //     return filteredMovie[0];
-  //   }
+  async getMovie(id: number): Promise<Movie> {
+    const {
+      data: {
+        data: { movie },
+      },
+    } = await axios(this.MOVIE_DETAILS_URL, {
+      params: {
+        movie_id: id,
+      },
+    });
+    return movie;
+  }
 
-  //   deleteMovie(id: number): boolean {
-  // const cleanedMovies = this.movies.filter((movie) => movie.id !== id);
-  // if (this.movies.length > cleanedMovies.length) {
-  //   this.movies = cleanedMovies;
-  // return true;
-  // } else {
-  //   return false;
-  // }
-  //   }
-
-  //   addMovie(name: string, score: number) {
-  // const newMovie = {
-  //   id: parseInt(`${this.movies.length}`),
-  //   name,
-  //   score,
-  // };
-  // this.movies.push(newMovie);
-  // return newMovie;
-  //   }
+  async getSuggestions(id: number): Promise<[Movie]> {
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios(this.MOVIE_SUGGESTIONS_URL, {
+      params: {
+        movie_id: id,
+      },
+    });
+    return movies;
+  }
 }

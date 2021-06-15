@@ -1,4 +1,4 @@
-import { Args, Float, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Float, Int, Query, Resolver } from '@nestjs/graphql';
 import { Movie } from './movie.model';
 import { MovieService } from './movie.service';
 
@@ -21,21 +21,13 @@ export class UserResolver {
     return this.movieService.getMovies(limit, rating);
   }
 
-  // @Query((returns) => Movie, { nullable: true })
-  // async movie(@Args('id', { type: () => Int }) id: number) {
-  //   return this.movieService.getById(id);
-  // }
+  @Query((returns) => Movie, { nullable: true })
+  async movie(@Args({ name: 'id', type: () => Int }) id: number) {
+    return this.movieService.getMovie(id);
+  }
 
-  // @Mutation((returns) => Boolean, { nullable: true })
-  // async deleteMovie(@Args('id', { type: () => Int }) id: number) {
-  //   return this.movieService.deleteMovie(id);
-  // }
-
-  // @Mutation((returns) => Movie)
-  // async addMovie(
-  //   @Args('name') name: string,
-  //   @Args('score', { type: () => Float }) score: number,
-  // ) {
-  //   return this.movieService.addMovie(name, score);
-  // }
+  @Query((returns) => [Movie])
+  async suggestions(@Args({ name: 'id', type: () => Int }) id: number) {
+    return this.movieService.getSuggestions(id);
+  }
 }
